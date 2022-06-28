@@ -82,10 +82,10 @@ int ktvar3d(KRUHOTVAR3D const *krt) {
 
 	fprintf(stdout,
 		"module %s_0(f=0) {\n"
-		"\tlinear_extrude(height=f*%s_Incr+((f>=%i)?0:%s_Base), center=true, $fn=%u) "
-		"import(\"%s\", center=%s, $fn=%u);\n}\n\n",
-		k, k, krt->nobase, k, krt->smooth,
-		krt->fname, (krt->center) ? "true" : "false", krt->smooth
+		"\tlinear_extrude(height=f*%s_Incr+((f>=%i)?0:%s_Base), center=%s, $fn=%u) "
+		"import(\"%s\", center=true, $fn=%u);\n}\n\n",
+		k, k, krt->nobase, k, (krt->center) ? "true" : "false", krt->smooth,
+		krt->fname, krt->smooth
 	);
 
 	return 0;
