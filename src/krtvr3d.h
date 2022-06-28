@@ -60,6 +60,8 @@ typedef struct KRUHOTVAR3D {
 	int nobase;
 	int mirror;
 	bool center;
+	KRTXYZ scale;		// The overal scale, ignored if all == 0.0
+	KRTXYZ angles;		// Only used if mode == 0
 } KRUHOTVAR3D;
 
 extern char const kruhotvar[];
