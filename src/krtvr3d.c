@@ -55,22 +55,30 @@ int ktvar3d(KRUHOTVAR3D const *krt) {
 	k = (krt->vname) ? krt->vname : kruhotvar;
 	maxlayer = (krt->layers > 0) ? krt->layers : 1;
 
-	if ((i = krt->mode & 7) == 0) i = 7;
-	uhly.x = (i & 4) ? 360.0 : 0.0;
-	uhly.y = (i & 2) ? 360.0 : 0.0;
-	uhly.z = (i & 1) ? 360.0 : 0.0;
+	if ((i = krt->mode & 7) == 0) {
+		uhly.x = krt->angles.x;
+		uhly.y = krt->angles.y;
+		uhly.z = krt->angles.z;
+	}
+	else {
+		uhly.x = (i & 4) ? 360.0 : 0.0;
+		uhly.y = (i & 2) ? 360.0 : 0.0;
+		uhly.z = (i & 1) ? 360.0 : 0.0;
+	}
 
 	fprintf(stdout,
 		"// Script created by the kruhotvary 3d engine,\n"
 		"// https://github.com/Pantarheon/kruhotvary3d.git\n\n"
 		"%s_Base = %g;\n"
 		"%s_Incr = %g;\n"
-		"%s_Scal = [%g, %g, %g];\n\n"
-		"%s_%i();\n\n",
+		"%s_Scal = [%g, %g, %g];\n\n",
 		k, krt->base,
 		k, krt->increment,
-		k, krt->scales.x, krt->scales.y, krt->scales.z,
-		k, maxlayer);
+		k, krt->scales.x, krt->scales.y, krt->scales.z
+	);
+	if ((krt->scale.z != 0.0) || (krt->scale.y != 0.0) || (krt->scale.x != 0.0))
+		fprintf(stdout, "scale([%g, %g, %g]) ", krt->scale.x, krt->scale.y, krt->scale.z);
+	fprintf(stdout, "%s_%i();\n\n", k, maxlayer);
 
 	for (i = maxlayer; i; i--) {
 		fprintf(stdout, mdl, k, i, i);
