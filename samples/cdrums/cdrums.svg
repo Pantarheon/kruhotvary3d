@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g>
+        <g id="L1">
+            <path id="DrumStick" d="M95,10c-0.663,-0.72 -1.195,-2.14 -1.339,-3.792c-0.215,-2.45 0.498,-4.543 1.579,-4.638c1.081,-0.095 2.147,1.843 2.361,4.293c0.142,1.631 -0.126,3.104 -0.64,3.935l3.32,24.87l7.09,81.042c0.092,1.047 -0.678,1.965 -1.725,2.057l-0.452,0.039c-1.047,0.092 -1.965,-0.679 -2.056,-1.726l-7.091,-81.042l-1.047,-25.038Z" style="fill:#632717;fill-rule:nonzero;"/>
+            <path id="DrumStick1" serif:id="DrumStick" d="M105,190c0.663,0.72 1.195,2.14 1.339,3.792c0.215,2.45 -0.498,4.543 -1.579,4.638c-1.081,0.095 -2.147,-1.843 -2.361,-4.293c-0.143,-1.631 0.125,-3.104 0.64,-3.935l-3.32,-24.87l-7.09,-81.042c-0.092,-1.047 0.678,-1.965 1.725,-2.057l0.452,-0.039c1.047,-0.092 1.965,0.679 2.056,1.726l7.09,81.042l1.048,25.038Z" style="fill:#632717;fill-rule:nonzero;"/>
+        </g>
+    </g>
+</svg>
