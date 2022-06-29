@@ -77,7 +77,7 @@ int ktvar3d(KRUHOTVAR3D const *krt) {
 		k, krt->scales.x, krt->scales.y, krt->scales.z
 	);
 
-	// Call and ake the main module
+	// Call and Make the main module
 	fprintf(stdout, "%s();\n\n"
 		"module %s(t = [%g, %g, %g], r = [%g, %g, %g], s = [%g, %g, %g]) {\n"
 		"\ttranslate(t)\n"
