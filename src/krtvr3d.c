@@ -76,9 +76,23 @@ int ktvar3d(KRUHOTVAR3D const *krt) {
 		k, krt->increment,
 		k, krt->scales.x, krt->scales.y, krt->scales.z
 	);
-	if ((krt->scale.z != 0.0) || (krt->scale.y != 0.0) || (krt->scale.x != 0.0))
-		fprintf(stdout, "scale([%g, %g, %g]) ", krt->scale.x, krt->scale.y, krt->scale.z);
-	fprintf(stdout, "%s_%i();\n\n", k, maxlayer);
+
+	// Call and ake the main module
+	fprintf(stdout, "%s();\n\n"
+		"module %s(t = [%g, %g, %g], r = [%g, %g, %g], s = [%g, %g, %g]) {\n"
+		"\ttranslate(t)\n"
+		"\t\trotate(r)\n"
+		"\t\t\tscale(s)\n"
+		"\t\t\t\t%s_%u();\n"
+		"}\n\n",
+		k, k,
+		krt->translate.x, krt->translate.y, krt->translate.z,
+		krt->rotate.x, krt->rotate.y, krt->rotate.z,
+		(krt->scale.x) ? krt->scale.x : 1.0,
+			(krt->scale.y) ? krt->scale.y : 1.0,
+				(krt->scale.z) ? krt->scale.z : 1.0,
+		k, maxlayer
+	);
 
 	for (i = maxlayer; i; i--) {
 		fprintf(stdout, mdl, k, i, i);
