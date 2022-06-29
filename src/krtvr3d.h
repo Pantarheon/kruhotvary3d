@@ -60,7 +60,9 @@ typedef struct KRUHOTVAR3D {
 	int nobase;
 	int mirror;
 	bool center;
-	KRTXYZ scale;		// The overal scale, ignored if all == 0.0
+	KRTXYZ scale;		// The default scale (any 0.0 is replaced by 1.0)
+	KRTXYZ rotate;		// The default rotation
+	KRTXYZ translate;	// The default translation
 	KRTXYZ angles;		// Only used if mode == 0
 } KRUHOTVAR3D;
 
