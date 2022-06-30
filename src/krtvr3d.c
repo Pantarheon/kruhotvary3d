@@ -102,11 +102,13 @@ int ktvar3d(KRUHOTVAR3D const *krt) {
 	fprintf(stdout, "rotate([%g, %g, %g]/%u) %s_%u(f);\n}\n\n", uhly.x, uhly.y, uhly.z, 1 << i, k, i-1);
 	}
 
+	fprintf(stdout, "module %s_0(f=0) {\n\t", k);
+	if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.y != 0))
+		fprintf(stdout, "translate([%g, %g, %g]) ", krt->itrans.x, krt->itrans.y, krt->itrans.z);
 	fprintf(stdout,
-		"module %s_0(f=0) {\n"
-		"\tlinear_extrude(height=f*%s_Incr+((f>=%i)?0:%s_Base), center=%s, $fn=%u) "
+		"linear_extrude(height=f*%s_Incr+((f>=%i)?0:%s_Base), center=%s, $fn=%u) "
 		"import(\"%s\", center=true, $fn=%u);\n}\n\n",
-		k, k, krt->nobase, k, (krt->center) ? "true" : "false", krt->smooth,
+		k, krt->nobase, k, (krt->center) ? "true" : "false", krt->smooth,
 		krt->fname, krt->smooth
 	);
 
