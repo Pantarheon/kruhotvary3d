@@ -63,6 +63,7 @@ typedef struct KRUHOTVAR3D {
 	KRTXYZ scale;		// The default scale (any 0.0 is replaced by 1.0)
 	KRTXYZ rotate;		// The default rotation
 	KRTXYZ translate;	// The default translation
+	KRTXYZ itrans;		// Translation of imported objects
 	KRTXYZ angles;		// Only used if mode == 0
 } KRUHOTVAR3D;
 
