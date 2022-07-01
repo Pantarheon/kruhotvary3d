@@ -48,6 +48,12 @@ typedef struct KRTXYZ {
 	double z;
 } KRTXYZ;
 
+typedef struct KRTXY {
+	double x;
+	double y;
+	bool   cond;
+} KRTXY;
+
 typedef struct KRUHOTVAR3D {
 	char const *fname;
 	char const *vname;
@@ -64,6 +70,8 @@ typedef struct KRUHOTVAR3D {
 	KRTXYZ rotate;		// The default rotation
 	KRTXYZ translate;	// The default translation
 	KRTXYZ itrans;		// Translation of imported objects
+	KRTXY  escale;		// Scaling of extrusion
+	double twist;		// Twist the extrusion
 	KRTXYZ angles;		// Only used if mode == 0
 } KRUHOTVAR3D;
 
