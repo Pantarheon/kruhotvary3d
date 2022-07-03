@@ -56,7 +56,7 @@ typedef struct KRTXY {
 
 typedef struct KRUHOTVAR3D {
 	char const *fname;
-	char const *vname;
+	char const *modname;
 	KRTXYZ scales;
 	double base;
 	double increment;
@@ -75,6 +75,4 @@ typedef struct KRUHOTVAR3D {
 	KRTXYZ angles;		// Only used if mode == 0
 } KRUHOTVAR3D;
 
-extern char const kruhotvar[];
-
-int ktvar3d(KRUHOTVAR3D const *krt);
+int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count);
