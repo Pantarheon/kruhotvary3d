@@ -44,7 +44,7 @@
 
 static KRUHOTVAR3D kruhotvar3data =  {
 	NULL,				/* fname */
-	kruhotvar,			/* vname */
+	NULL,				/* modname */
 	{0.81, 0.81, 1.0},	/* scales */
 	5.0,				/* base */
 	0.0,				/* increment */
@@ -54,6 +54,8 @@ static KRUHOTVAR3D kruhotvar3data =  {
 	3,					/* nobase */
 	3,					/* mirror */
 	true,				/* center */
+	.rotate = {0,0,45},
+	.twist = 5
 };
 
 static char lic[] = "/*\n"
@@ -103,9 +105,9 @@ int main(int argc, char*argv[]) {
 	int retval;
 
 	kruhotvar3data.fname = "cdrums.svg";
-	kruhotvar3data.vname = "drumster";
+	kruhotvar3data.modname = "drumster";
 	fp = freopen("drumster.scad", "wb", stdout);
 	fprintf(stdout, "%s", lic);
-	retval = ktvar3d(&kruhotvar3data);
+	retval = ktvar3d(&kruhotvar3data, 1);
 	fclose(fp);
 }
