@@ -46,8 +46,8 @@ static KRUHOTVAR3D krtko3data =  {
 	NULL,				/* fname */
 	NULL,				/* modname */
 	{1, 1, -1.0},		/* scales */
-	3.0,				/* base */
-	0.5,				/* increment */
+	5.0,				/* base */
+	0,				/* increment */
 	4,					/* layers */
 	1,					/* mode */
 	100,				/* smooth */
