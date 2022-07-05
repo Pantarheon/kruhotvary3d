@@ -136,7 +136,7 @@ int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 
 		for (i = maxlayer; i; i--) {
 			fprintf(stdout, mdl, k, i, i, krt->twist);
-			fprintf(stdout, "\t%s_%u(tw = tw);\n", k, i-1);
+			fprintf(stdout, "%s_%u(tw = tw);\n", k, i-1);
 			if ((signed)i >= krt->nobase) fprintf(stdout, (i == krt->mirror) ? "\tscale(-%s_Scal) " : "\tscale(%s_Scal) ", k);
 			else  fprintf(stdout, (i == krt->mirror) ? "\tscale(-[1, 1, %s_Scal.z]) " : "\tscale([1, 1, %s_Scal.z]) ", k);
 		fprintf(stdout, "rotate([%g, %g, %g]/%u) %s_%u(f,tw);\n}\n\n", uhly.x, uhly.y, uhly.z, 1 << i, k, i-1);
