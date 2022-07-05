@@ -42,7 +42,7 @@
 #include <string.h>
 #include "krtvr3d.h"
 
-static char const mdl[] = "module %s_%u(f=%u) {\n\t";
+static char const mdl[] = "module %s_%u(f = %u, tw = %g) {\n\t";
 
 int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 	KRUHOTVAR3D const *krt;
@@ -118,11 +118,11 @@ int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 
 		// Make the main module
 		fprintf(stdout,
-			"module %s(t = [%g, %g, %g], r = [%g, %g, %g], s = [%g, %g, %g]) {\n"
+			"module %s(t = [%g, %g, %g], r = [%g, %g, %g], s = [%g, %g, %g], tw = %g) {\n"
 			"\ttranslate(t)\n"
 			"\t\trotate(r)\n"
 			"\t\t\tscale(s)\n"
-			"\t\t\t\t%s_%u();\n"
+			"\t\t\t\t%s_%u(tw = tw);\n"
 			"}\n\n",
 			k,
 			krt->translate.x, krt->translate.y, krt->translate.z,
@@ -130,27 +130,28 @@ int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 			(krt->scale.x) ? krt->scale.x : 1.0,
 				(krt->scale.y) ? krt->scale.y : 1.0,
 					(krt->scale.z) ? krt->scale.z : 1.0,
+			krt->twist,
 			k, maxlayer
 		);
 
 		for (i = maxlayer; i; i--) {
-			fprintf(stdout, mdl, k, i, i);
-			fprintf(stdout, "\t%s_%u();\n", k, i-1);
+			fprintf(stdout, mdl, k, i, i, krt->twist);
+			fprintf(stdout, "\t%s_%u(tw = tw);\n", k, i-1);
 			if ((signed)i >= krt->nobase) fprintf(stdout, (i == krt->mirror) ? "\tscale(-%s_Scal) " : "\tscale(%s_Scal) ", k);
 			else  fprintf(stdout, (i == krt->mirror) ? "\tscale(-[1, 1, %s_Scal.z]) " : "\tscale([1, 1, %s_Scal.z]) ", k);
-		fprintf(stdout, "rotate([%g, %g, %g]/%u) %s_%u(f);\n}\n\n", uhly.x, uhly.y, uhly.z, 1 << i, k, i-1);
+		fprintf(stdout, "rotate([%g, %g, %g]/%u) %s_%u(f,tw);\n}\n\n", uhly.x, uhly.y, uhly.z, 1 << i, k, i-1);
 		}
 
-		fprintf(stdout, "module %s_0(f=0) {\n\t", k);
+		fprintf(stdout, "module %s_0(f = 0, tw = %g) {\n\t", k,  krt->twist);
 		if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.y != 0))
 			fprintf(stdout, "translate([%g, %g, %g]) ", krt->itrans.x, krt->itrans.y, krt->itrans.z);
 		fprintf(stdout,
-			"linear_extrude(height=f*%s_Incr+((f>=%i)?0:%s_Base), center=%s, scale=[%g,%g], twist=%g, $fn=%u) "
+			"linear_extrude(height=f*%s_Incr+((f>=%i)?0:%s_Base), center=%s, scale=[%g,%g], twist=tw, $fn=%u) "
 			"import(\"%s\", center=true, $fn=%u);\n}\n\n",
 			k, krt->nobase, k, (krt->center) ? "true" : "false",
 				(krt->escale.cond) ? krt->escale.x : 1.0,
 				(krt->escale.cond) ? krt->escale.y : 1.0,
-				krt->twist, krt->smooth,
+				krt->smooth,
 			krt->fname, krt->smooth
 		);
 	}
