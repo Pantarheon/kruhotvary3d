@@ -46,15 +46,15 @@ static KRUHOTVAR3D krtko3data =  {
 	NULL,				/* fname */
 	NULL,				/* modname */
 	{1, 1, -1.0},		/* scales */
-	5.0,				/* base */
-	0,				/* increment */
+	3.0,				/* base */
+	0.75,				/* increment */
 	4,					/* layers */
 	1,					/* mode */
 	100,				/* smooth */
 	7,					/* nobase */
 	3,					/* mirror */
 	false,				/* center */
-	{0.5, 0.5, 0.7},		/* scale */
+	{0.5, 0.5, 0.7},	/* scale */
 	.itrans.y = 62,
 	.twist = 10
 };
