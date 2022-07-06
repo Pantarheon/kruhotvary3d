@@ -42,7 +42,7 @@
 #include <string.h>
 #include "krtvr3d.h"
 
-static char const mdl[] = "module %s_%u(f = %u, tw = %g) {\n\t";
+static char const mdl[] = "module %s_%u(tw = %g, f = %u) {\n\t";
 
 int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 	KRUHOTVAR3D const *krt;
@@ -118,31 +118,31 @@ int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 
 		// Make the main module
 		fprintf(stdout,
-			"module %s(t = [%g, %g, %g], r = [%g, %g, %g], s = [%g, %g, %g], tw = %g) {\n"
+			"module %s(tw = %g, t = [%g, %g, %g], r = [%g, %g, %g], s = [%g, %g, %g]) {\n"
 			"\ttranslate(t)\n"
 			"\t\trotate(r)\n"
 			"\t\t\tscale(s)\n"
-			"\t\t\t\t%s_%u(tw = tw);\n"
+			"\t\t\t\t%s_%u(tw);\n"
 			"}\n\n",
 			k,
+			krt->twist,
 			krt->translate.x, krt->translate.y, krt->translate.z,
 			krt->rotate.x, krt->rotate.y, krt->rotate.z,
 			(krt->scale.x) ? krt->scale.x : 1.0,
 				(krt->scale.y) ? krt->scale.y : 1.0,
 					(krt->scale.z) ? krt->scale.z : 1.0,
-			krt->twist,
 			k, maxlayer
 		);
 
 		for (i = maxlayer; i; i--) {
-			fprintf(stdout, mdl, k, i, i, krt->twist);
-			fprintf(stdout, "%s_%u(tw = tw);\n", k, i-1);
+			fprintf(stdout, mdl, k, i, krt->twist, i);
+			fprintf(stdout, "%s_%u(tw);\n", k, i-1);
 			if ((signed)i >= krt->nobase) fprintf(stdout, (i == krt->mirror) ? "\tscale(-%s_Scal) " : "\tscale(%s_Scal) ", k);
 			else  fprintf(stdout, (i == krt->mirror) ? "\tscale(-[1, 1, %s_Scal.z]) " : "\tscale([1, 1, %s_Scal.z]) ", k);
-		fprintf(stdout, "rotate([%g, %g, %g]/%u) %s_%u(f,tw);\n}\n\n", uhly.x, uhly.y, uhly.z, 1 << i, k, i-1);
+		fprintf(stdout, "rotate([%g, %g, %g]/%u) %s_%u(tw,f);\n}\n\n", uhly.x, uhly.y, uhly.z, 1 << i, k, i-1);
 		}
 
-		fprintf(stdout, "module %s_0(f = 0, tw = %g) {\n\t", k,  krt->twist);
+		fprintf(stdout, "module %s_0(tw = %g, f = 0) {\n\t", k,  krt->twist);
 		if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.y != 0))
 			fprintf(stdout, "translate([%g, %g, %g]) ", krt->itrans.x, krt->itrans.y, krt->itrans.z);
 		fprintf(stdout,
