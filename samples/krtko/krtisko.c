@@ -61,6 +61,8 @@ static KRUHOTVAR3D krtisko3data =  {
 	.twist = 10
 };
 
+static KRTLIST krtlist = { &krtisko3data, NULL };
+
 static char lic[] = "/*\n"
 "\tkrtisko.scad\n"
 "\n"
@@ -111,6 +113,6 @@ int main(int argc, char*argv[]) {
 	krtisko3data.modname = "krtisko";
 	fp = freopen("krtisko.scad", "wb", stdout);
 	fprintf(stdout, "%s", lic);
-	retval = ktvar3d(&krtisko3data, 1);
+	retval = krtvr3d_scad(&krtlist);
 	fclose(fp);
 }

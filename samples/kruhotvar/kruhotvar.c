@@ -40,7 +40,7 @@
 */
 
 #include <stdio.h>
-#include "krtvr3d.h"
+#include <krtvr3d.h>
 
 static KRUHOTVAR3D kruhotvar3data =  {
 	NULL,				/* fname */
@@ -56,6 +56,8 @@ static KRUHOTVAR3D kruhotvar3data =  {
 	false,				/* center */
 	{0, 0, 0.7},		/* scale */
 };
+
+static KRTLIST krtlist = { &kruhotvar3data, NULL };
 
 static char lic[] = "/*\n"
 "\tkruhotvar.scad\n"
@@ -107,6 +109,6 @@ int main(int argc, char*argv[]) {
 	kruhotvar3data.modname = "kruhotvar";
 	fp = freopen("kruhotvar.scad", "wb", stdout);
 	fprintf(stdout, "%s", lic);
-	retval = ktvar3d(&kruhotvar3data, 1);
+	retval = krtvr3d_scad(&krtlist);
 	fclose(fp);
 }

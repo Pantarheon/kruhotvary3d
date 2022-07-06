@@ -40,7 +40,7 @@
 */
 
 #include <stdio.h>
-#include "krtvr3d.h"
+#include <krtvr3d.h>
 
 static KRUHOTVAR3D kruhotvar3data[] =  {
 	{
@@ -142,6 +142,7 @@ static char lic[] = "/*\n"
 
 int main(int argc, char*argv[]) {
 	FILE *fp;
+	KRTLIST *krtlist;
 	int retval;
 
 	kruhotvar3data[0].fname = "kt.svg";
@@ -149,8 +150,11 @@ int main(int argc, char*argv[]) {
 	kruhotvar3data[2].fname = "kt.svg";
 	kruhotvar3data[0].modname = "kt";
 	kruhotvar3data[2].modname = "krtvar";
-	fp = freopen("kt.scad", "wb", stdout);
-	fprintf(stdout, "%s", lic);
-	retval = ktvar3d(kruhotvar3data, tvary);
-	fclose(fp);
+	if (krtlist = krtvr3d_arraytolist(kruhotvar3data, tvary)) {
+		fp = freopen("kt.scad", "wb", stdout);
+		fprintf(stdout, "%s", lic);
+		retval = krtvr3d_scad(krtlist);
+		fclose(fp);
+		KRTLIST *krtvr3d_freelist(krtlist);
+	}
 }
