@@ -42,12 +42,13 @@
 #include <string.h>
 #include "krtvr3d.h"
 
-static char const mdl[] = "module %s_%u(tw = %g, f = %u) {\n\t";
+static char const mdl[] = "module %s_%u(tw = %g, es = [%g, %g], f = %u) {\n\t";
 
 int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 	KRUHOTVAR3D const *krt;
 	KRTXYZ uhly;
 	char const *k;
+	double ex, ey;
 	unsigned int i, n;
 	unsigned int maxlayer;
 	bool err = false;
@@ -107,6 +108,15 @@ int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 			uhly.z = (i & 1) ? 360.0 : 0.0;
 		}
 
+		if (krt->escale.cond) {
+			ex = krt->escale.x;
+			ey = krt->escale.x;
+		}
+		else {
+			ex = 1.0;
+			ey = 1.0;
+		}
+
 		fprintf(stdout,
 			"%s_Base = %g;\n"
 			"%s_Incr = %g;\n"
@@ -118,14 +128,14 @@ int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 
 		// Make the main module
 		fprintf(stdout,
-			"module %s(tw = %g, t = [%g, %g, %g], r = [%g, %g, %g], s = [%g, %g, %g]) {\n"
+			"module %s(tw = %g, es=[%g, %g], t = [%g, %g, %g], r = [%g, %g, %g], s = [%g, %g, %g]) {\n"
 			"\ttranslate(t)\n"
 			"\t\trotate(r)\n"
 			"\t\t\tscale(s)\n"
-			"\t\t\t\t%s_%u(tw);\n"
+			"\t\t\t\t%s_%u(tw, es);\n"
 			"}\n\n",
 			k,
-			krt->twist,
+			krt->twist, ex, ey,
 			krt->translate.x, krt->translate.y, krt->translate.z,
 			krt->rotate.x, krt->rotate.y, krt->rotate.z,
 			(krt->scale.x) ? krt->scale.x : 1.0,
@@ -135,23 +145,20 @@ int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 		);
 
 		for (i = maxlayer; i; i--) {
-			fprintf(stdout, mdl, k, i, krt->twist, i);
-			fprintf(stdout, "%s_%u(tw);\n", k, i-1);
+			fprintf(stdout, mdl, k, i, krt->twist, ex, ey, i);
+			fprintf(stdout, "%s_%u(tw, es);\n", k, i-1);
 			if ((signed)i >= krt->nobase) fprintf(stdout, (i == krt->mirror) ? "\tscale(-%s_Scal) " : "\tscale(%s_Scal) ", k);
 			else  fprintf(stdout, (i == krt->mirror) ? "\tscale(-[1, 1, %s_Scal.z]) " : "\tscale([1, 1, %s_Scal.z]) ", k);
-		fprintf(stdout, "rotate([%g, %g, %g]/%u) %s_%u(tw,f);\n}\n\n", uhly.x, uhly.y, uhly.z, 1 << i, k, i-1);
+		fprintf(stdout, "rotate([%g, %g, %g]/%u) %s_%u(tw,es,f);\n}\n\n", uhly.x, uhly.y, uhly.z, 1 << i, k, i-1);
 		}
 
-		fprintf(stdout, "module %s_0(tw = %g, f = 0) {\n\t", k,  krt->twist);
+		fprintf(stdout, "module %s_0(tw = %g, es=[%g, %g], f = 0) {\n\t", k,  krt->twist);
 		if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.y != 0))
 			fprintf(stdout, "translate([%g, %g, %g]) ", krt->itrans.x, krt->itrans.y, krt->itrans.z);
 		fprintf(stdout,
-			"linear_extrude(height=f*%s_Incr+((f>=%i)?0:%s_Base), center=%s, scale=[%g,%g], twist=tw, $fn=%u) "
+			"linear_extrude(height=f*%s_Incr+((f>=%i)?0:%s_Base), center=%s, scale=es, twist=tw, $fn=%u) "
 			"import(\"%s\", center=true, $fn=%u);\n}\n\n",
-			k, krt->nobase, k, (krt->center) ? "true" : "false",
-				(krt->escale.cond) ? krt->escale.x : 1.0,
-				(krt->escale.cond) ? krt->escale.y : 1.0,
-				krt->smooth,
+			k, krt->nobase, k, (krt->center) ? "true" : "false", krt->smooth,
 			krt->fname, krt->smooth
 		);
 	}
