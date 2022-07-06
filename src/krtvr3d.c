@@ -152,7 +152,7 @@ int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 		fprintf(stdout, "rotate([%g, %g, %g]/%u) %s_%u(tw,es,f);\n}\n\n", uhly.x, uhly.y, uhly.z, 1 << i, k, i-1);
 		}
 
-		fprintf(stdout, "module %s_0(tw = %g, es=[%g, %g], f = 0) {\n\t", k,  krt->twist);
+		fprintf(stdout, "module %s_0(tw = %g, es=[%g, %g], f = 0) {\n\t", k,  krt->twist, ex, ey);
 		if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.y != 0))
 			fprintf(stdout, "translate([%g, %g, %g]) ", krt->itrans.x, krt->itrans.y, krt->itrans.z);
 		fprintf(stdout,
