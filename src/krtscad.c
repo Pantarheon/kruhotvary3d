@@ -1,5 +1,5 @@
 /*
-	krtvr3d.c
+	krtscad.c
 
 	Copyright 2022 G. Adam Stanislav
 	All rights reserved
