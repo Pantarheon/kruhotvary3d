@@ -42,9 +42,12 @@
 #include <string.h>
 #include "krtvr3d.h"
 
+// Produce a SCAD file, to be processed by OpenSCAD.
+
 static char const mdl[] = "module %s_%u(tw = %g, es = [%g, %g], f = %u) {\n\t";
 
-int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
+int krtvr3d_scad(KRTLIST * const krtvar) {
+	KRTLIST *next, *prev;
 	KRUHOTVAR3D const *krt;
 	KRTXYZ uhly;
 	char const *k;
@@ -53,26 +56,28 @@ int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 	unsigned int maxlayer;
 	bool err = false;
 
-	if (count == 0) {
-		fprintf(stderr, "krtvar3d: Nothing to do.\n");
+	if (krtvar == NULL) {
+		fprintf(stderr, "krtvr3d_scad: Nothing to do.\n");
 		return 1;
 	}
 
-	for (n = 0, krt = krtvar; n < count; n++, krt++) {
+	for (n = 0, next = krtvar; next; n++, next = next->next) {
+		krt = next->thisone;
 		if (krt->fname == NULL) {
-			fprintf(stderr, "krtvar3d: Missing input file name in KRUHOTVAR3D[%u].\n", n);
+			fprintf(stderr, "krtvr3d_scad: Missing input file name in KRUHOTVAR3D[%u].\n", n);
 			err = true;
 		}
 		if (krt->modname == NULL) {
-			fprintf(stderr, "krtvar3d: Missing module name in KRUHOTVAR3D[%u].\n", n);
+			fprintf(stderr, "krtvr3d_scad: Missing module name in KRUHOTVAR3D[%u].\n", n);
 			err = true;
 		}
-		if (n) for (i = 0; i < n; i++) {
-			if (!strcmp(krt->modname, krtvar[i].modname)) {
+		if (n) for (i = 0, prev = krtvar; i < n; i++, prev = prev->next) {
+			if (!strcmp(krt->modname, prev->thisone->modname)) {
 				fprintf(stderr,
-					"krtvar3d: Duplicate module name '%s' in KRUHOTVAR3D[%u] and KRUHOTVAR3D[%u].\n",
+					"krtvr3d_scad: Duplicate module name '%s' in KRUHOTVAR3D[%u] and KRUHOTVAR3D[%u].\n",
 					krt->modname, i, n
 				);
+				err = true;
 			}
 		}
 	}
@@ -84,7 +89,8 @@ int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 	);
 
 	// Call the first main module and comment out the rest of them.
-	for (n = 0, krt = krtvar; n < count; n++, krt++) {
+	for (n = 0, next = krtvar; next; n++, next = next->next) {
+		krt = next->thisone;
 		fprintf(stdout,
 			"// %s();\n" + (n == 0) * 3,
 			krt->modname
@@ -93,7 +99,8 @@ int ktvar3d(KRUHOTVAR3D const *krtvar, unsigned int count) {
 
 	fprintf(stdout, "\n");
 
-	for (n = 0, krt = krtvar; n < count; n++, krt++) {
+	for (next = krtvar; next; next = next->next) {
+		krt = next->thisone;
 		k = krt->modname;
 		maxlayer = (krt->layers > 0) ? krt->layers : 1;
 

@@ -1,5 +1,5 @@
 /*
-	krtvr3d.h
+	arlist.c
 
 	Copyright 2022 G. Adam Stanislav
 	All rights reserved
@@ -39,47 +39,31 @@
 
 */
 
-#include <stdio.h>
-#include <stdbool.h>
+#include <string.h>
+#include <stdlib.h>
+#include "krtvr3d.h"
 
-typedef struct KRTXYZ {
-	double x;
-	double y;
-	double z;
-} KRTXYZ;
+/* Convert an array of KRUHOTVAR3D structures to a linked list. */
 
-typedef struct KRTXY {
-	double x;
-	double y;
-	bool   cond;
-} KRTXY;
+KRTLIST *krtvr3d_arraytolist(KRUHOTVAR3D * const krtvar, unsigned int n) {
+	KRTLIST *krtlist = NULL;
+	KRTLIST *last, *next;
+	unsigned int i;
 
-typedef struct KRUHOTVAR3D {
-	char const *fname;
-	char const *modname;
-	KRTXYZ scales;
-	double base;
-	double increment;
-	unsigned int layers;
-	unsigned int mode;
-	unsigned int smooth;
-	int nobase;
-	int mirror;
-	bool center;
-	KRTXYZ scale;		// The default scale (any 0.0 is replaced by 1.0)
-	KRTXYZ rotate;		// The default rotation
-	KRTXYZ translate;	// The default translation
-	KRTXYZ itrans;		// Translation of imported objects
-	KRTXY  escale;		// Scaling of extrusion
-	double twist;		// Twist the extrusion
-	KRTXYZ angles;		// Only used if mode == 0
-} KRUHOTVAR3D;
+	for (i = 0, last = NULL; i < n; i++) {
+		if ((next = (KRTLIST *)calloc(sizeof(KRTLIST), 1)) == NULL) return krtlist;
+		next->thisone = krtvar + i;
+		if (krtlist == NULL) krtlist = next;
+		else last->next = next;
+		last = next;
+	}
+	return krtlist;
+}
 
-typedef struct KRTLIST {
-	KRUHOTVAR3D *thisone;
-	struct KRTLIST *next;
-} KRTLIST;
-
-int krtvr3d_scad(KRTLIST * const krtvar);
-KRTLIST *krtvr3d_arraytolist(KRUHOTVAR3D * const krtvar, unsigned int n);
-KRTLIST *krtvr3d_freelist(KRTLIST *list);
+KRTLIST *krtvr3d_freelist(KRTLIST *list) {
+	KRTLIST *next, *first;
+	if (list != NULL) for (first = list, next = list->next; first; first = next){
+		free(first);
+	}
+	return NULL;
+}
