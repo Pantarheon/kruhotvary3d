@@ -1,5 +1,5 @@
 /*
-	krtvr3d.h
+	defdata.c
 
 	Copyright 2022 G. Adam Stanislav
 	All rights reserved
@@ -39,59 +39,17 @@
 
 */
 
-#include <stdio.h>
-#include <stdbool.h>
+#include "krtvr3d.h"
 
-// These are the possible values for KRUHOTVAR3D.mode.
-#define	KRVTR_X	4
-#define	KRVTR_Y	2
-#define	KRVTR_Z	1
-#define	KRVTR_XY	(KRVTR_X | KRVTR_Y)
-#define	KRVTR_XZ	(KRVTR_X | KRVTR_Z)
-#define	KRVTR_YZ	(KRVTR_Y | KRVTR_Z)
-#define	KRVTR_XYZ	(KRVTR_X | KRVTR_Y | KRVTR_Z)
-#define	KRVTR_CUSTOM	0
+// This is just a basic default KRUHOTVAR3D.
 
-typedef struct KRTXYZ {
-	double x;
-	double y;
-	double z;
-} KRTXYZ;
-
-typedef struct KRTXY {
-	double x;
-	double y;
-	bool   cond;
-} KRTXY;
-
-typedef struct KRUHOTVAR3D {
-	char const *fname;
-	char const *modname;
-	KRTXYZ scales;
-	double base;
-	double increment;
-	unsigned int layers;
-	unsigned int mode;
-	unsigned int smooth;
-	int nobase;
-	int mirror;
-	bool center;
-	KRTXYZ scale;		// The default scale (any 0.0 is replaced by 1.0)
-	KRTXYZ rotate;		// The default rotation
-	KRTXYZ translate;	// The default translation
-	KRTXYZ itrans;		// Translation of imported objects
-	KRTXY  escale;		// Scaling of extrusion
-	double twist;		// Twist the extrusion
-	KRTXYZ angles;		// Only used if mode == KRVTR_CUSTOM
-} KRUHOTVAR3D;
-
-typedef struct KRTLIST {
-	KRUHOTVAR3D *thisone;
-	struct KRTLIST *next;
-} KRTLIST;
-
-extern KRUHOTVAR3D const krtvr_defaults;
-
-int krtvr3d_scad(KRTLIST * const krtvar);
-KRTLIST *krtvr3d_arraytolist(KRUHOTVAR3D * const krtvar, unsigned int n);
-KRTLIST *krtvr3d_freelist(KRTLIST *list);
+KRUHOTVAR3D const krtvr_defaults = {
+	.base      = 3.5,
+	.increment = 1.5,
+	.scales    = {1.0, 1.0, -1.0},
+	.layers    = 7,
+	.mode      = KRVTR_Z,
+	.nobase    = 3,
+	.mirror    = 3,
+	.smooth    = 100
+};
