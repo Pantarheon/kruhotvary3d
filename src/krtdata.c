@@ -1,5 +1,5 @@
 /*
-	krtvr3d.h
+	krtdata.c
 
 	Copyright 2022 G. Adam Stanislav
 	All rights reserved
@@ -39,63 +39,29 @@
 
 */
 
-#include <stdio.h>
-#include <stdbool.h>
+#include "krtvr3d.h"
+#include <stdlib.h>
 
-// These are the possible values for KRUHOTVAR3D.mode.
-#define	KRVTR_X	4
-#define	KRVTR_Y	2
-#define	KRVTR_Z	1
-#define	KRVTR_XY	(KRVTR_X | KRVTR_Y)
-#define	KRVTR_XZ	(KRVTR_X | KRVTR_Z)
-#define	KRVTR_YZ	(KRVTR_Y | KRVTR_Z)
-#define	KRVTR_XYZ	(KRVTR_X | KRVTR_Y | KRVTR_Z)
-#define	KRVTR_CUSTOM	0
+KRUHOTVAR3D *krtvr3d_resetdata(KRUHOTVAR3D *krtvar) {
+	return memcpy(krtvar, &krtvr_defaults, sizeof(KRUHOTVAR3D));
+}
 
-typedef struct KRTXYZ {
-	double x;
-	double y;
-	double z;
-} KRTXYZ;
+KRUHOTVAR3D *krtvr3d_newdata(void) {
+	KRUHOTVAR3D *krtvar;
+	return (krtvar = (KRUHOTVAR3D *)malloc(sizeof(KRUHOTVAR3D))) ?
+		krtvr3d_resetdata(krtvar) : NULL;
+}
 
-typedef struct KRTXY {
-	double x;
-	double y;
-	bool   cond;
-} KRTXY;
+KRTLIST *krtvr3d_newlisteddata(void) {
+	KRTLIST *krtlist;
+	if (krtlist = (KRTLIST *)malloc(sizeof(KRTLIST))) {
+		krtlist->next = NULL;
+		if ((krtlist->thisone = krtvr3d_newdata()) == NULL) {
+			free(krtlist);
+			krtlist = NULL;
+		}
+	}
+	return krtlist;
+}
 
-typedef struct KRUHOTVAR3D {
-	char const *fname;
-	char const *modname;
-	KRTXYZ scales;
-	double base;
-	double increment;
-	unsigned int layers;
-	unsigned int mode;
-	unsigned int smooth;
-	int nobase;
-	int mirror;
-	bool center;
-	KRTXYZ scale;		// The default scale (any 0.0 is replaced by 1.0)
-	KRTXYZ rotate;		// The default rotation
-	KRTXYZ translate;	// The default translation
-	KRTXYZ itrans;		// Translation of imported objects
-	KRTXY  escale;		// Scaling of extrusion
-	double twist;		// Twist the extrusion
-	KRTXYZ angles;		// Only used if mode == KRVTR_CUSTOM
-} KRUHOTVAR3D;
 
-typedef struct KRTLIST {
-	KRUHOTVAR3D *thisone;
-	struct KRTLIST *next;
-} KRTLIST;
-
-extern KRUHOTVAR3D const krtvr_defaults;
-
-int krtvr3d_scad(KRTLIST * const krtvar);
-KRTLIST *krtvr3d_arraytolist(KRUHOTVAR3D * const krtvar, unsigned int n);
-KRTLIST *krtvr3d_freelist(KRTLIST *list);
-
-KRUHOTVAR3D *krtvr3d_resetdata(KRUHOTVAR3D *krtvar);
-KRUHOTVAR3D *krtvr3d_newdata(void);
-KRTLIST *krtvr3d_newlisteddata(void);
