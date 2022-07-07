@@ -40,6 +40,7 @@
 */
 
 #include <string.h>
+#include <ctype.h>
 #include "krtvr3d.h"
 
 // Produce a SCAD file, to be processed by OpenSCAD.
@@ -63,21 +64,43 @@ int krtvr3d_scad(KRTLIST * const krtvar) {
 
 	for (n = 0, next = krtvar; next; n++, next = next->next) {
 		krt = next->thisone;
+		k   = krt->modname;
+
 		if (krt->fname == NULL) {
 			fprintf(stderr, "krtvr3d_scad: Missing input file name in KRUHOTVAR3D[%u].\n", n);
 			err = true;
 		}
-		if (krt->modname == NULL) {
+
+		if (k == NULL) {
 			fprintf(stderr, "krtvr3d_scad: Missing module name in KRUHOTVAR3D[%u].\n", n);
 			err = true;
 		}
-		if (n) for (i = 0, prev = krtvar; i < n; i++, prev = prev->next) {
-			if (!strcmp(krt->modname, prev->thisone->modname)) {
+		else {
+			if ((k[0] >= '0') && (k[0] <= '9')) {
 				fprintf(stderr,
-					"krtvr3d_scad: Duplicate module name '%s' in KRUHOTVAR3D[%u] and KRUHOTVAR3D[%u].\n",
-					krt->modname, i, n
+					"krtvr3d_scad: Module name '%s' in KRUHOTVAR3D[%u] starts with a digit.\n",
+					k, n
 				);
 				err = true;
+			}
+			for (i = 1; i < strlen(k); i++) {
+				if ((isalnum(k[i]) == 0) && (k[i] != '_')) {
+					fprintf(stderr,
+						"krtvr3d_scad: Invalid character(s) in module name '%s' in KRUHOTVAR3D[%u].\n",
+						k, n
+					);
+					err = true;
+					break;
+				}
+			}
+			if (n) for (i = 0, prev = krtvar; i < n; i++, prev = prev->next) {
+				if (!strcmp(k, prev->thisone->modname)) {
+					fprintf(stderr,
+						"krtvr3d_scad: Duplicate module name '%s' in KRUHOTVAR3D[%u] and KRUHOTVAR3D[%u].\n",
+						k, i, n
+					);
+					err = true;
+				}
 			}
 		}
 	}
