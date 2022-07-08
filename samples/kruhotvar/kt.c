@@ -155,6 +155,6 @@ int main(int argc, char*argv[]) {
 		fprintf(stdout, "%s", lic);
 		retval = krtvr3d_scad(krtlist);
 		fclose(fp);
-		KRTLIST *krtvr3d_freelist(krtlist);
+		krtvr3d_freelist(krtlist);
 	}
 }
