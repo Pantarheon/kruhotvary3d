@@ -39,8 +39,34 @@
 
 */
 
+#ifndef	_KRTVR3D_H_
+#define	_KRTVR3D_H_
+
 #include <stdio.h>
 #include <stdbool.h>
+
+
+#ifdef	NOKRTLIB	// Should you need a static library...
+# define	KRTHID
+# define	KRTDC
+#elif defined _WIN32
+# define	KRTHID
+#ifdef	DLL
+# define	KRTDC	__declspec(dllexport)
+#else	// !DLL
+# define	KRTDC	__declspec(dllimport)
+#endif	// DLL
+#elif defined __APPLE__ || defined linux || defined __FreeBSD__
+#  define KRTDC __attribute__((visibility("default")))
+# define	KRTHID __attribute__((visibility("hidden")))
+#else	// !_WIN32 !__APPLE__ !linux !__FreeBSD__
+# define	KRTDC
+# define	KRTHID
+#endif	// _WIN32
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // These are the possible values for KRUHOTVAR3D.mode.
 #define	KRVTR_X	4
@@ -90,12 +116,18 @@ typedef struct KRTLIST {
 	struct KRTLIST *next;
 } KRTLIST;
 
-extern KRUHOTVAR3D const krtvr_defaults;
+KRTDC extern KRUHOTVAR3D const krtvr_defaults;
 
-int krtvr3d_scad(KRTLIST * const krtvar);
-KRTLIST *krtvr3d_arraytolist(KRUHOTVAR3D * const krtvar, unsigned int n);
-KRTLIST *krtvr3d_freelist(KRTLIST *list);
+KRTDC int krtvr3d_scad(KRTLIST * const krtvar);
+KRTDC KRTLIST *krtvr3d_arraytolist(KRUHOTVAR3D * const krtvar, unsigned int n);
+KRTDC KRTLIST *krtvr3d_freelist(KRTLIST *list);
 
-KRUHOTVAR3D *krtvr3d_resetdata(KRUHOTVAR3D *krtvar);
-KRUHOTVAR3D *krtvr3d_newdata(void);
-KRTLIST *krtvr3d_newlisteddata(void);
+KRTDC KRUHOTVAR3D *krtvr3d_resetdata(KRUHOTVAR3D *krtvar);
+KRTDC KRUHOTVAR3D *krtvr3d_newdata(void);
+KRTDC KRTLIST *krtvr3d_newlisteddata(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif	// defined(_KRTVR3D_H_)

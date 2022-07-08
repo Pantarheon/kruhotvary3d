@@ -45,7 +45,7 @@
 
 /* Convert an array of KRUHOTVAR3D structures to a linked list. */
 
-KRTLIST *krtvr3d_arraytolist(KRUHOTVAR3D * const krtvar, unsigned int n) {
+KRTDC KRTLIST *krtvr3d_arraytolist(KRUHOTVAR3D * const krtvar, unsigned int n) {
 	KRTLIST *krtlist = NULL;
 	KRTLIST *last, *next;
 	unsigned int i;
@@ -60,7 +60,7 @@ KRTLIST *krtvr3d_arraytolist(KRUHOTVAR3D * const krtvar, unsigned int n) {
 	return krtlist;
 }
 
-KRTLIST *krtvr3d_freelist(KRTLIST *list) {
+KRTDC KRTLIST *krtvr3d_freelist(KRTLIST *list) {
 	KRTLIST *next, *first;
 	if (list != NULL) for (first = list, next = list->next; first; first = next){
 		free(first);

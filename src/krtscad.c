@@ -47,7 +47,7 @@
 
 static char const mdl[] = "module %s_%u(tw = %g, es = [%g, %g], f = %u) {\n\t";
 
-int krtvr3d_scad(KRTLIST * const krtvar) {
+KRTDC int krtvr3d_scad(KRTLIST * const krtvar) {
 	KRTLIST *next, *prev;
 	KRUHOTVAR3D const *krt;
 	KRTXYZ uhly;

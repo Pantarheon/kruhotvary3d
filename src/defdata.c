@@ -43,7 +43,7 @@
 
 // This is just a basic default KRUHOTVAR3D.
 
-KRUHOTVAR3D const krtvr_defaults = {
+KRTDC KRUHOTVAR3D const krtvr_defaults = {
 	.base      = 3.5,
 	.increment = 1.5,
 	.scales    = {1.0, 1.0, -1.0},

@@ -42,17 +42,17 @@
 #include "krtvr3d.h"
 #include <stdlib.h>
 
-KRUHOTVAR3D *krtvr3d_resetdata(KRUHOTVAR3D *krtvar) {
+KRTDC KRUHOTVAR3D *krtvr3d_resetdata(KRUHOTVAR3D *krtvar) {
 	return memcpy(krtvar, &krtvr_defaults, sizeof(KRUHOTVAR3D));
 }
 
-KRUHOTVAR3D *krtvr3d_newdata(void) {
+KRTDC KRUHOTVAR3D *krtvr3d_newdata(void) {
 	KRUHOTVAR3D *krtvar;
 	return (krtvar = (KRUHOTVAR3D *)malloc(sizeof(KRUHOTVAR3D))) ?
 		krtvr3d_resetdata(krtvar) : NULL;
 }
 
-KRTLIST *krtvr3d_newlisteddata(void) {
+KRTDC KRTLIST *krtvr3d_newlisteddata(void) {
 	KRTLIST *krtlist;
 	if (krtlist = (KRTLIST *)malloc(sizeof(KRTLIST))) {
 		krtlist->next = NULL;
