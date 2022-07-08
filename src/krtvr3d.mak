@@ -2,7 +2,7 @@
 #
 #	nmake -F krtvr3d.mak
 #
-#	Copyright 2019-2021 G. Adam Stanislav
+#	Copyright 2022 G. Adam Stanislav
 #	All rights reserved
 #
 #	Redistribution and use in source and binary forms,
