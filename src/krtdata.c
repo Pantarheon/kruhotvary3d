@@ -41,9 +41,10 @@
 
 #include "krtvr3d.h"
 #include <stdlib.h>
+#include <string.h>
 
 KRTDC KRUHOTVAR3D *krtvr3d_resetdata(KRUHOTVAR3D *krtvar) {
-	return memcpy(krtvar, &krtvr_defaults, sizeof(KRUHOTVAR3D));
+	return (KRUHOTVAR3D *)memcpy(krtvar, &krtvr_defaults, sizeof(KRUHOTVAR3D));
 }
 
 KRTDC KRUHOTVAR3D *krtvr3d_newdata(void) {
