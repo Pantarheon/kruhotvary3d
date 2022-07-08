@@ -40,11 +40,14 @@
 
 objects=krtscad.obj arlist.obj defdata.obj krtdata.obj
 
-all: krtvr3d.dll $(objects)
+all: krtvr3d.dll $(objects) krtvr3d.res 
 
 .c.obj:
 	cl -Ox -c -DDLL $*.c
 
+krtvr3d.res: krtvr3d.rc
+	rc /v krtvr3d.rc
+
 krtvr3d.dll: $(objects)
-	link -dll -out:krtvr3d.dll *.obj
+	link -dll -out:krtvr3d.dll *.obj krtvr3d.res
 
