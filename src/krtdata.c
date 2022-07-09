@@ -61,6 +61,7 @@ KRTDC KRTLIST *krtvr3d_newlisteddata(void) {
 			free(krtlist);
 			krtlist = NULL;
 		}
+		else krtlist->allocated = true;
 	}
 	return krtlist;
 }

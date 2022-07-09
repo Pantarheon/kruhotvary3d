@@ -114,6 +114,7 @@ typedef struct KRUHOTVAR3D {
 typedef struct KRTLIST {
 	KRUHOTVAR3D *thisone;
 	struct KRTLIST *next;
+	bool allocated;		// true if thisone was dynamicaly allocated, false otherwise
 } KRTLIST;
 
 KRTDC extern KRUHOTVAR3D const krtvr_defaults;

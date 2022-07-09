@@ -63,6 +63,13 @@ KRTDC KRTLIST *krtvr3d_arraytolist(KRUHOTVAR3D * const krtvar, unsigned int n) {
 KRTDC KRTLIST *krtvr3d_freelist(KRTLIST *list) {
 	KRTLIST *next, *first;
 	if (list != NULL) for (first = list, next = list->next; first; first = next){
+		if (first->allocated) {
+			if (first->thisone != NULL) {
+				free(first->thisone);
+				first->thisone = NULL;
+			}
+			first->allocated = false;
+		}
 		free(first);
 	}
 	return NULL;
