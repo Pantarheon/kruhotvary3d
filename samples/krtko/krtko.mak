@@ -1,6 +1,6 @@
 # Windows makefile for samples/krtko
 #
-#	nmake -F kruhotvar.mak
+#	nmake -F krtko.mak
 #
 #	Copyright 2022 G. Adam Stanislav
 #	All rights reserved
