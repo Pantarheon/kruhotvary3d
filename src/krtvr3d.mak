@@ -48,6 +48,6 @@ all: krtvr3d.dll $(objects) krtvr3d.res
 krtvr3d.res: krtvr3d.rc
 	rc /v krtvr3d.rc
 
-krtvr3d.dll: $(objects)
-	link -dll -out:krtvr3d.dll *.obj krtvr3d.res
+krtvr3d.dll: $(objects) krtvr3d.res
+	link -dll -out:krtvr3d.dll $(objects) krtvr3d.res
 
