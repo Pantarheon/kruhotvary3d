@@ -98,7 +98,7 @@ static KRUHOTVAR3D kruhotvar3data[] =  {
 };
 #define tvary	(sizeof(kruhotvar3data)/sizeof(kruhotvar3data[0]))
 
-static char lic[] = "/*\n"
+static const char lic[] =
 "\tkt.scad\n"
 "\n"
 "\tCopyright 2022 G. Adam Stanislav\n"
@@ -135,9 +135,7 @@ static char lic[] = "/*\n"
 "\tCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,\n"
 "\tSTRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR\n"
 "\tOTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n"
-"\tSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n"
-"\n"
-"*/\n\n";
+"\tSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n";
 
 
 int main(int argc, char*argv[]) {
@@ -152,9 +150,7 @@ int main(int argc, char*argv[]) {
 	kruhotvar3data[2].modname = "krtvar";
 	if (krtlist = krtvr3d_arraytolist(kruhotvar3data, tvary)) {
 		fp = freopen("kt.scad", "wb", stdout);
-		fprintf(stdout, "%s", lic);
-		fflush(stdout);
-		retval = krtvr3d_scad(krtlist);
+		retval = krtvr3d_scad(krtlist, lic);
 		fclose(fp);
 		krtvr3d_freelist(krtlist);
 	}

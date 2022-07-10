@@ -59,7 +59,7 @@ static KRUHOTVAR3D kruhotvar3data =  {
 
 static KRTLIST krtlist = { &kruhotvar3data, NULL };
 
-static char lic[] = "/*\n"
+static const char lic[] =
 "\tkruhotvar.scad\n"
 "\n"
 "\tCopyright 2022 G. Adam Stanislav\n"
@@ -96,9 +96,7 @@ static char lic[] = "/*\n"
 "\tCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,\n"
 "\tSTRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR\n"
 "\tOTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n"
-"\tSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n"
-"\n"
-"*/\n\n";
+"\tSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n";
 
 
 int main(int argc, char*argv[]) {
@@ -108,8 +106,6 @@ int main(int argc, char*argv[]) {
 	kruhotvar3data.fname = "kruhotvar.svg";
 	kruhotvar3data.modname = "kruhotvar";
 	fp = freopen("kruhotvar.scad", "wb", stdout);
-	fprintf(stdout, "%s", lic);
-	fflush(stdout);
-	retval = krtvr3d_scad(&krtlist);
+	retval = krtvr3d_scad(&krtlist, lic);
 	fclose(fp);
 }
