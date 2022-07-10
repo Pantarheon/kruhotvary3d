@@ -119,7 +119,7 @@ typedef struct KRTLIST {
 
 KRTDC extern KRUHOTVAR3D const krtvr_defaults;
 
-KRTDC int krtvr3d_scad(KRTLIST * const krtvar);
+KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment);
 KRTDC KRTLIST *krtvr3d_arraytolist(KRUHOTVAR3D * const krtvar, unsigned int n);
 KRTDC KRTLIST *krtvr3d_freelist(KRTLIST *list);
 

@@ -47,7 +47,7 @@
 
 static char const mdl[] = "module %s_%u(tw = %g, es = [%g, %g], f = %u) {\n\t";
 
-KRTDC int krtvr3d_scad(KRTLIST * const krtvar) {
+KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment) {
 	KRTLIST *next, *prev;
 	KRUHOTVAR3D const *krt;
 	KRTXYZ uhly;
@@ -105,6 +105,8 @@ KRTDC int krtvr3d_scad(KRTLIST * const krtvar) {
 		}
 	}
 	if (err) return 2;
+
+	if (comment != NULL) fprintf(stdout, "/*\n%s\n*/\n\n", comment);
 
 	fprintf(stdout,
 		"// Script created by the kruhotvary 3d engine,\n"
