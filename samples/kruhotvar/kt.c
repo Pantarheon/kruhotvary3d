@@ -153,6 +153,7 @@ int main(int argc, char*argv[]) {
 	if (krtlist = krtvr3d_arraytolist(kruhotvar3data, tvary)) {
 		fp = freopen("kt.scad", "wb", stdout);
 		fprintf(stdout, "%s", lic);
+		fflush(stdout);
 		retval = krtvr3d_scad(krtlist);
 		fclose(fp);
 		krtvr3d_freelist(krtlist);

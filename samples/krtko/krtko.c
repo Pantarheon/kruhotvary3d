@@ -111,6 +111,7 @@ int main(int argc, char*argv[]) {
 	krtko3data.modname = "krtko";
 	fp = freopen("krtko.scad", "wb", stdout);
 	fprintf(stdout, "%s", lic);
+	fflush(stdout);
 	retval = krtvr3d_scad(&krtlist);
 	fclose(fp);
 }

@@ -109,6 +109,7 @@ int main(int argc, char*argv[]) {
 	kruhotvar3data.modname = "kruhotvar";
 	fp = freopen("kruhotvar.scad", "wb", stdout);
 	fprintf(stdout, "%s", lic);
+	fflush(stdout);
 	retval = krtvr3d_scad(&krtlist);
 	fclose(fp);
 }
