@@ -106,7 +106,7 @@ KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment) {
 
 		if (((krt->mode & KRVTR_XYZ) == KRVTR_CUSTOM) &&
 			(
-				(!((krt->angles.x == 360.) || (krt->angles.y == 360.0) || (krt->angles.z == 360.0))) ||
+				(!((krt->angles.x == 360.0) || (krt->angles.y == 360.0) || (krt->angles.z == 360.0))) ||
 				(krt->angles.x > 360.0) || (krt->angles.x < 0.0) ||
 				(krt->angles.y > 360.0) || (krt->angles.y < 0.0) ||
 				(krt->angles.z > 360.0) || (krt->angles.z < 0.0)
