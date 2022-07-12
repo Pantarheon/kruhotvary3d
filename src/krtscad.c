@@ -195,7 +195,7 @@ KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment) {
 			"\t\t}\n\t}\n\telse {\n\t\t",
 			k, krt->nobase, k, (krt->center) ? "true" : "false", krt->smooth,
 			krt->fname, krt->smooth,
-			krt->mooth
+			(krt->mooth) ? krt->mooth : krtvr_defaults.mooth
 		);
 		if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.y != 0))
 			fprintf(stdout, "translate([%g, %g, %g]) ", krt->itrans.x, krt->itrans.y, krt->itrans.z);
