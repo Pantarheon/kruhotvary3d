@@ -38,8 +38,8 @@
 #	OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 #	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-objs=drumster.obj cdrumster.obj
-apps=drumster.exe cdrumster.exe
+objs=drumster.obj cdrumster.obj chocodrums.obj
+apps=drumster.exe cdrumster.exe chocodrums.exe
 libs=../../src/krtvr3d.lib
 
 all: $(apps)
@@ -52,4 +52,7 @@ drumster.exe: drumster.obj $(libs)
 
 cdrumster.exe: cdrumster.obj $(libs)
 	link -out:cdrumster.exe cdrumster.obj $(libs)
+
+chocodrums.exe: chocodrums.obj $(libs)
+	link -out:chocodrums.exe chocodrums.obj $(libs)
 

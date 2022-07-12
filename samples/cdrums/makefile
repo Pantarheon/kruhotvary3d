@@ -40,8 +40,8 @@ CC=gcc
 CFLG=-O3
 CFLAGS=$(CFLG)
 PREFIX=/usr
-OBJS=cdrumster.o drumster.o
-APPS=cdrumster drumster
+OBJS=cdrumster.o drumster.o chocodrums.o
+APPS=cdrumster drumster chocodrums
 
 all: $(APPS)
 
@@ -53,6 +53,9 @@ cdrumster: cdrumster.o
 drumster: drumster.o
 	$(CC) $(CFLG) -o drumster drumster.o -L$(PREFIX)/lib -lkrtvr3d
 
+chocodrums: chocodrums.o
+	$(CC) $(CFLG) -o chocodrums chocodrums.o -L$(PREFIX)/lib -lkrtvr3d
+
 %.o: %.c $(PREFIX)/include/krtvr3d.h
 	$(CC) -c $(CFLAGS) $< -o $@ -I$(PREFIX)/include
 
@@ -62,7 +65,10 @@ install-cdrumster: cdrumster
 install-drumster: drumster
 	install -p -s drumster $(PREFIX)/bin
 
-install: install-cdrumster install-drumster
+install-chocodrums: chocodrums
+	install -p -s chocodrums $(PREFIX)/bin
+
+install: install-cdrumster install-drumster install-chocodrums
 
 clean:
 	rm -f $(OBJS) $(APPS)
