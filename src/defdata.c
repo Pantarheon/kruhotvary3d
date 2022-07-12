@@ -51,5 +51,6 @@ KRTDC KRUHOTVAR3D const krtvr_defaults = {
 	.mode      = KRVTR_Z,
 	.nobase    = 3,
 	.mirror    = 3,
-	.smooth    = 100
+	.smooth    = 100,
+	.mooth     = 60
 };

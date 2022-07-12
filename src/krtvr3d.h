@@ -109,6 +109,7 @@ typedef struct KRUHOTVAR3D {
 	KRTXY  escale;		// Scaling of extrusion
 	double twist;		// Twist the extrusion
 	KRTXYZ angles;		// Only used if mode == KRVTR_CUSTOM
+	unsigned int mooth;	// How smooth should minkowski be
 } KRUHOTVAR3D;
 
 typedef struct KRTLIST {
