@@ -103,6 +103,20 @@ KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment) {
 				}
 			}
 		}
+
+		if (((krt->mode & KRVTR_XYZ) == KRVTR_CUSTOM) &&
+			(
+				(!((krt->angles.x == 360.) || (krt->angles.y == 360.0) || (krt->angles.z == 360.0))) ||
+				(krt->angles.x > 360.0) || (krt->angles.x < 0.0) ||
+				(krt->angles.y > 360.0) || (krt->angles.y < 0.0) ||
+				(krt->angles.z > 360.0) || (krt->angles.z < 0.0)
+			)
+		) {
+			fprintf(stderr, 
+				"krtvr3d_scad: In KRUHOTVAR3D[%u]=[%g,%g,%g], at least one angle must be 360, all must be <= 360 and >= 0.\n",
+				n, krt->angles.x, krt->angles.y, krt->angles.z
+			);
+		}
 	}
 	if (err) return 2;
 
