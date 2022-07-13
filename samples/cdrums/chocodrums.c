@@ -65,10 +65,10 @@ static KRUHOTVAR3D kruhotvar3data[] =  {
 		{0.81, 0.81, -0.7},	/* scales */
 		5.0,				/* base */
 		0.25,				/* increment */
-		11,					/* layers */
+		7,					/* layers */
 		0,					/* mode */
 		100,				/* smooth */
-		8,					/* nobase */
+		5,					/* nobase */
 		3,					/* mirror */
 		true,				/* center */
 		{0.5, 0.5, 0.75},	/* scale */
