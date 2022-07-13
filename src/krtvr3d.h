@@ -101,6 +101,7 @@ typedef struct KRUHOTVAR3D {
 	unsigned int smooth;
 	int nobase;
 	int mirror;
+	int minsc;			// Minimum layer to star scaling
 	bool center;
 	KRTXYZ scale;		// The default scale (any 0.0 is replaced by 1.0)
 	KRTXYZ rotate;		// The default rotation

@@ -193,7 +193,7 @@ KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment) {
 		for (i = maxlayer; i; i--) {
 			fprintf(stdout, mdl, k, i, krt->twist, ex, ey, i);
 			fprintf(stdout, "%s_%u(tw, es, mink);\n", k, i-1);
-			if ((signed)i >= krt->nobase) fprintf(stdout, (i == krt->mirror) ? "\tscale(-%s_Scal) " : "\tscale(%s_Scal) ", k);
+			if ((signed)i >= krt->minsc) fprintf(stdout, (i == krt->mirror) ? "\tscale(-%s_Scal) " : "\tscale(%s_Scal) ", k);
 			else  fprintf(stdout, (i == krt->mirror) ? "\tscale(-[1, 1, %s_Scal.z]) " : "\tscale([1, 1, %s_Scal.z]) ", k);
 		fprintf(stdout, "rotate([%g, %g, %g]/%u) %s_%u(tw,es,mink,f);\n}\n\n", uhly.x, uhly.y, uhly.z, 1 << i, k, i-1);
 		}
