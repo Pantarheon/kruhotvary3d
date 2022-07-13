@@ -53,6 +53,7 @@ static KRUHOTVAR3D krtisko3data =  {
 	100,				/* smooth */
 	3,					/* nobase */
 	3,					/* mirror */
+	3,					/* minsc */
 	true,				/* center */
 	{0.75, 0.75, 0.7},	/* scale */
 	.itrans.y = 62,
