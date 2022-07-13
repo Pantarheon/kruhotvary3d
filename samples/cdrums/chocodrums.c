@@ -54,6 +54,7 @@ static KRUHOTVAR3D kruhotvar3data[] =  {
 		100,				/* smooth */
 		8,					/* nobase */
 		3,					/* mirror */
+		7,					/* minsk */
 		true,				/* center */
 		{2.5, 0.5, 0.5},	/* scale */
 		{0.0,90.0,90.0},	/* rotate */
@@ -70,6 +71,7 @@ static KRUHOTVAR3D kruhotvar3data[] =  {
 		100,				/* smooth */
 		5,					/* nobase */
 		3,					/* mirror */
+		3,					/* minsk */
 		true,				/* center */
 		{0.5, 0.5, 0.75},	/* scale */
 		{0.0,0.0,0.0},		/* rotate */

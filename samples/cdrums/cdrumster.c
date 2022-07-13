@@ -53,6 +53,7 @@ static KRUHOTVAR3D kruhotvar3data =  {
 	100,				/* smooth */
 	7,					/* nobase */
 	3,					/* mirror */
+	7,					/* minsc */
 	false,				/* center */
 };
 
