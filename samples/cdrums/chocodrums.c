@@ -74,7 +74,7 @@ static KRUHOTVAR3D kruhotvar3data[] =  {
 		3,					/* minsc */
 		true,				/* center */
 		{0.5, 0.5, 0.75},	/* scale */
-		{0.0,0.0,0.0},		/* rotate */
+		{0.0,-5.0,-30.0},	/* rotate */
 		{0,0,0},			/* translate */
 		.angles = {90,180,360},
 		.twist  = 7.5,
