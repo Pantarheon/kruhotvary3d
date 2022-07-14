@@ -45,7 +45,7 @@
 
 // Produce a SCAD file, to be processed by OpenSCAD.
 
-static char const mdl[] = "module %s_%u(tw = %g, es = [%g, %g], mink = 0, f = %u) {\n\t";
+static char const mdl[] = "module %s__(tw = %g, es = [%g, %g], mink = 0, n, f, layers) {\n\t";
 
 KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment) {
 	KRTLIST *next, *prev;
@@ -166,30 +166,38 @@ KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment) {
 		fprintf(stdout,
 			"%s_Base = %g;\n"
 			"%s_Incr = %g;\n"
-			"%s_Scal = [%g, %g, %g];\n\n",
+			"%s_Scal = [%g, %g, %g];\n"
+			"%s_Minsc  = %u;\n"
+			"%s_Nobase = %u;\n"
+			"%s_Mirror = %u;\n\n",
 			k, krt->base,
 			k, krt->increment,
-			k, krt->scales.x, krt->scales.y, krt->scales.z
+			k, krt->scales.x, krt->scales.y, krt->scales.z,
+			k, krt->minsc,
+			k, krt->nobase,
+			k, krt->mirror
 		);
 
 		// Make the main module
 		fprintf(stdout,
-			"module %s(tw = %g, es = [%g, %g], mink = 0, t = [%g, %g, %g], r = [%g, %g, %g], s = [%g, %g, %g]) {\n"
+			"module %s(n = %u, tw = %g, es = [%g, %g], mink = 0, t = [%g, %g, %g], r = [%g, %g, %g], s = [%g, %g, %g]) {\n"
 			"\ttranslate(t)\n"
 			"\t\trotate(r)\n"
 			"\t\t\tscale(s)\n"
-			"\t\t\t\t%s_%u(tw, es, mink);\n"
+			"\t\t\t\t%s__(tw, es, mink, n, n, n);\n"
 			"}\n\n",
 			k,
+			maxlayer,
 			krt->twist, ex, ey,
 			krt->translate.x, krt->translate.y, krt->translate.z,
 			krt->rotate.x, krt->rotate.y, krt->rotate.z,
 			(krt->scale.x) ? krt->scale.x : 1.0,
 				(krt->scale.y) ? krt->scale.y : 1.0,
 					(krt->scale.z) ? krt->scale.z : 1.0,
-			k, maxlayer
+			k
 		);
 
+#if 0
 		for (i = maxlayer; i; i--) {
 			fprintf(stdout, mdl, k, i, krt->twist, ex, ey, i);
 			fprintf(stdout, "%s_%u(tw, es, mink);\n", k, i-1);
@@ -219,6 +227,41 @@ KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment) {
 			k, krt->nobase, k, (krt->center) ? "true" : "false", krt->smooth,
 			krt->fname, krt->smooth
 		);
+#else
+		fprintf(stdout, mdl, k, krt->twist, ex, ey);
+	fprintf(stdout,
+		"\tMirror = (%s_Mirror <= layers) ? %s_Mirror : (layers > 1) ? layers - 1 : layers;\n\n"
+		"\tif (n > 0) {\n"
+		"\t\t%s__(tw, es, mink, n-1, n-1, layers);\n"
+		"\t\tscale((n==Mirror) ? -[1, 1, %s_Scal.z] : (n < %s_Minsc) ?  [1, 1, %s_Scal.z] : %s_Scal) rotate([%g, %g, %g]*pow(0.5,n)) %s__(tw ,es, mink, n-1, f, layers);\n"
+		"\t}\n"
+		"\telse if (mink > 0) {\n"
+		"\t\tminkowski() {\n\t\t\t",
+		k, k,
+		k,
+		k, k, k, k, uhly.x, uhly.y, uhly.z, k
+	);
+	if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.z != 0))
+		fprintf(stdout, "translate([%g, %g, %g]) ", krt->itrans.x, krt->itrans.y, krt->itrans.z);
+	fprintf(stdout,
+		"linear_extrude(height=f*%s_Incr+(((f>=%s_Nobase)&&(%s_Incr>0))?0:%s_Base), center=%s, scale=es, twist=tw, $fn=%u) import(\"%s\", center=true, $fn=%u);\n"
+		"\t\t\tsphere(mink, $fn=%u);\n"
+		"\t\t}\n"
+		"\t}\n"
+		"\telse {\n\t\t",
+		k, k, k, k, (krt->center) ? "true" : "false", krt->smooth,
+		krt->fname, krt->smooth,
+		(krt->mooth) ? krt->mooth : krtvr_defaults.mooth
+	);
+	if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.z != 0))
+		fprintf(stdout, "translate([%g, %g, %g]) ", krt->itrans.x, krt->itrans.y, krt->itrans.z);
+	fprintf(stdout,
+		"linear_extrude(height=f*%s_Incr+((f>=%s_Nobase)?0:%s_Base), center=%s, scale=es, twist=tw, $fn=%u) import(\"%s\", center=true, $fn=%u);\n"
+		"\t}\n"
+		"}\n\n",
+		k, k, k, (krt->center) ? "true" : "false", krt->smooth, krt->fname, krt->smooth
+	);
+#endif
 	}
 
 	return 0;
