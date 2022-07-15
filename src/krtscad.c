@@ -120,8 +120,25 @@ KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment) {
 	}
 	if (err) return 2;
 
+	// If we get here, we have found no errors in any of the
+	// KRUHOTVAR3D structures passed to us as a list of inputs.
+	//
+	// So this is a good place to output an optional comment.
+	// We *assume* the comment contains no asterisk immediately
+	// followed by a slash. That would result in an invalid
+	// comment.
+	//
+	// We leave it up to the caller to assure no such error
+	// is present in the comment string passed to us.
+	//
+	// The purpose of this comment is to allow to include a
+	// license, or a copyright notice, or both, or whatever
+	// else the caller might want and wish, or perhaps even need.
 	if (comment != NULL) fprintf(stdout, "/*\n%s\n*/\n\n", comment);
 
+	// Next (or first if no comment was passed to us), we print
+	// a very brief notice informing a prospective reader of our
+	// engine.
 	fprintf(stdout,
 		"// Script created by the kruhotvary 3d engine,\n"
 		"// https://github.com/Pantarheon/kruhotvary3d.git\n\n"
@@ -138,6 +155,9 @@ KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment) {
 
 	fprintf(stdout, "\n");
 
+	// Compile all KRUHOTVAR3D structures in the list,
+	// into individual OpenSCAD modules within a single
+	// output stream.
 	for (next = krtvar; next; next = next->next) {
 		krt = next->thisone;
 		k = krt->modname;
@@ -197,72 +217,46 @@ KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment) {
 			k
 		);
 
-#if 0
-		for (i = maxlayer; i; i--) {
-			fprintf(stdout, mdl, k, i, krt->twist, ex, ey, i);
-			fprintf(stdout, "%s_%u(tw, es, mink);\n", k, i-1);
-			if ((signed)i >= krt->minsc) fprintf(stdout, (i == krt->mirror) ? "\tscale(-%s_Scal) " : "\tscale(%s_Scal) ", k);
-			else  fprintf(stdout, (i == krt->mirror) ? "\tscale(-[1, 1, %s_Scal.z]) " : "\tscale([1, 1, %s_Scal.z]) ", k);
-		fprintf(stdout, "rotate([%g, %g, %g]/%u) %s_%u(tw,es,mink,f);\n}\n\n", uhly.x, uhly.y, uhly.z, 1 << i, k, i-1);
-		}
-
-		fprintf(stdout, "module %s_0(tw = %g, es=[%g, %g], mink = 0, f = 0) {\n", k,  krt->twist, ex, ey);
-		fprintf(stdout, "\tif (mink > 0) {\n\t\tminkowski() {\n\t\t\t");
-		if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.y != 0))
+		// Add a recursive private module to produce
+		// the desired kruhotvar.
+		fprintf(stdout, mdl, k, krt->twist, ex, ey);
+		fprintf(stdout,
+			"\tMirror = (%s_Mirror <= layers) ? %s_Mirror : (layers > 1) ? layers - 1 : layers;\n\n"
+			"\tif (n > 0) {\n"
+			"\t\t%s__(tw, es, mink, n-1, n-1, layers);\n"
+			"\t\tscale((n==Mirror) ? -[1, 1, %s_Scal.z] : (n < %s_Minsc) ?  [1, 1, %s_Scal.z] : %s_Scal) rotate([%g, %g, %g]*pow(0.5,n)) %s__(tw ,es, mink, n-1, f, layers);\n"
+			"\t}\n"
+			"\telse if (mink > 0) {\n"
+			"\t\tminkowski() {\n\t\t\t",
+			k, k,
+			k,
+			k, k, k, k, uhly.x, uhly.y, uhly.z, k
+		);
+		if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.z != 0))
 			fprintf(stdout, "translate([%g, %g, %g]) ", krt->itrans.x, krt->itrans.y, krt->itrans.z);
 		fprintf(stdout,
-			"linear_extrude(height=f*%s_Incr+((f>=%i)?0:%s_Base), center=%s, scale=es, twist=tw, $fn=%u) "
-			"import(\"%s\", center=true, $fn=%u);\n"
+			"linear_extrude(height=f*%s_Incr+(((f>=%s_Nobase)&&(%s_Incr>0))?0:%s_Base), center=%s, scale=es, twist=tw, $fn=%u) import(\"%s\", center=true, $fn=%u);\n"
 			"\t\t\tsphere(mink, $fn=%u);\n"
-			"\t\t}\n\t}\n\telse {\n\t\t",
-			k, krt->nobase, k, (krt->center) ? "true" : "false", krt->smooth,
+			"\t\t}\n"
+			"\t}\n"
+			"\telse {\n\t\t",
+			k, k, k, k, (krt->center) ? "true" : "false", krt->smooth,
 			krt->fname, krt->smooth,
 			(krt->mooth) ? krt->mooth : krtvr_defaults.mooth
 		);
-		if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.y != 0))
+		if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.z != 0))
 			fprintf(stdout, "translate([%g, %g, %g]) ", krt->itrans.x, krt->itrans.y, krt->itrans.z);
 		fprintf(stdout,
-			"linear_extrude(height=f*%s_Incr+((f>=%i)?0:%s_Base), center=%s, scale=es, twist=tw, $fn=%u) "
-		"import(\"%s\", center=true, $fn=%u);\n\t}\n}\n\n",
-			k, krt->nobase, k, (krt->center) ? "true" : "false", krt->smooth,
-			krt->fname, krt->smooth
+			"linear_extrude(height=f*%s_Incr+((f>=%s_Nobase)?0:%s_Base), center=%s, scale=es, twist=tw, $fn=%u) import(\"%s\", center=true, $fn=%u);\n"
+			"\t}\n"
+			"}\n\n",
+			k, k, k, (krt->center) ? "true" : "false", krt->smooth, krt->fname, krt->smooth
 		);
-#else
-		fprintf(stdout, mdl, k, krt->twist, ex, ey);
-	fprintf(stdout,
-		"\tMirror = (%s_Mirror <= layers) ? %s_Mirror : (layers > 1) ? layers - 1 : layers;\n\n"
-		"\tif (n > 0) {\n"
-		"\t\t%s__(tw, es, mink, n-1, n-1, layers);\n"
-		"\t\tscale((n==Mirror) ? -[1, 1, %s_Scal.z] : (n < %s_Minsc) ?  [1, 1, %s_Scal.z] : %s_Scal) rotate([%g, %g, %g]*pow(0.5,n)) %s__(tw ,es, mink, n-1, f, layers);\n"
-		"\t}\n"
-		"\telse if (mink > 0) {\n"
-		"\t\tminkowski() {\n\t\t\t",
-		k, k,
-		k,
-		k, k, k, k, uhly.x, uhly.y, uhly.z, k
-	);
-	if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.z != 0))
-		fprintf(stdout, "translate([%g, %g, %g]) ", krt->itrans.x, krt->itrans.y, krt->itrans.z);
-	fprintf(stdout,
-		"linear_extrude(height=f*%s_Incr+(((f>=%s_Nobase)&&(%s_Incr>0))?0:%s_Base), center=%s, scale=es, twist=tw, $fn=%u) import(\"%s\", center=true, $fn=%u);\n"
-		"\t\t\tsphere(mink, $fn=%u);\n"
-		"\t\t}\n"
-		"\t}\n"
-		"\telse {\n\t\t",
-		k, k, k, k, (krt->center) ? "true" : "false", krt->smooth,
-		krt->fname, krt->smooth,
-		(krt->mooth) ? krt->mooth : krtvr_defaults.mooth
-	);
-	if ((krt->itrans.x != 0) || (krt->itrans.y != 0) || (krt->itrans.z != 0))
-		fprintf(stdout, "translate([%g, %g, %g]) ", krt->itrans.x, krt->itrans.y, krt->itrans.z);
-	fprintf(stdout,
-		"linear_extrude(height=f*%s_Incr+((f>=%s_Nobase)?0:%s_Base), center=%s, scale=es, twist=tw, $fn=%u) import(\"%s\", center=true, $fn=%u);\n"
-		"\t}\n"
-		"}\n\n",
-		k, k, k, (krt->center) ? "true" : "false", krt->smooth, krt->fname, krt->smooth
-	);
-#endif
 	}
 
+	// All done, return success. The caller may—or may not—use it
+	// as the return value of the program.
+	//
+	// At any rate, for us it is Hasta la Pasta!
 	return 0;
 }
