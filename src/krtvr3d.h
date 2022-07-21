@@ -121,6 +121,11 @@ typedef struct KRTLIST {
 
 KRTDC extern KRUHOTVAR3D const krtvr_defaults;
 
+// Verify the validity of a KRTLIST. Return true if
+// any error is found, false otherwise. List all
+// errors on stderr.
+KRTDC bool krtvr3d_errorcheck(KRTLIST * const krtvar);
+
 KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment);
 KRTDC KRTLIST *krtvr3d_arraytolist(KRUHOTVAR3D * const krtvar, unsigned int n);
 KRTDC KRTLIST *krtvr3d_freelist(KRTLIST *list);

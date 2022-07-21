@@ -38,7 +38,7 @@
 #	OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 #	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-objects=krtscad.obj arlist.obj defdata.obj krtdata.obj
+objects=krtscad.obj arlist.obj defdata.obj krtdata.obj krterrck.obj
 
 all: krtvr3d.dll $(objects) krtvr3d.res 
 

@@ -42,7 +42,7 @@ CFLAGS=$(CFLG) -fPIC
 PREFIX=/usr
 
 
-objects=krtscad.o arlist.o defdata.o krtdata.o
+objects=krtscad.o arlist.o defdata.o krtdata.o krterrck.o
 
 lib: libkrtvr3d.so $(objects)
 

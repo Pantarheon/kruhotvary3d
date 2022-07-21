@@ -48,77 +48,20 @@
 static char const mdl[] = "module %s__(tw = %g, es = [%g, %g], mink = 0, n, f, layers) {\n\t";
 
 KRTDC int krtvr3d_scad(KRTLIST * const krtvar, char const * const comment) {
-	KRTLIST *next, *prev;
+	KRTLIST *next;
 	KRUHOTVAR3D const *krt;
 	KRTXYZ uhly;
 	char const *k;
 	double ex, ey;
 	unsigned int i, n;
 	unsigned int maxlayer;
-	bool err = false;
 
 	if (krtvar == NULL) {
 		fprintf(stderr, "krtvr3d_scad: Nothing to do.\n");
 		return 1;
 	}
 
-	for (n = 0, next = krtvar; next; n++, next = next->next) {
-		krt = next->thisone;
-		k   = krt->modname;
-
-		if (krt->fname == NULL) {
-			fprintf(stderr, "krtvr3d_scad: Missing input file name in KRUHOTVAR3D[%u].\n", n);
-			err = true;
-		}
-
-		if (k == NULL) {
-			fprintf(stderr, "krtvr3d_scad: Missing module name in KRUHOTVAR3D[%u].\n", n);
-			err = true;
-		}
-		else {
-			if ((k[0] >= '0') && (k[0] <= '9')) {
-				fprintf(stderr,
-					"krtvr3d_scad: Module name '%s' in KRUHOTVAR3D[%u] starts with a digit.\n",
-					k, n
-				);
-				err = true;
-			}
-			for (i = 1; i < strlen(k); i++) {
-				if ((isalnum(k[i]) == 0) && (k[i] != '_')) {
-					fprintf(stderr,
-						"krtvr3d_scad: Invalid character(s) in module name '%s' in KRUHOTVAR3D[%u].\n",
-						k, n
-					);
-					err = true;
-					break;
-				}
-			}
-			if (n) for (i = 0, prev = krtvar; i < n; i++, prev = prev->next) {
-				if (!strcmp(k, prev->thisone->modname)) {
-					fprintf(stderr,
-						"krtvr3d_scad: Duplicate module name '%s' in KRUHOTVAR3D[%u] and KRUHOTVAR3D[%u].\n",
-						k, i, n
-					);
-					err = true;
-				}
-			}
-		}
-
-		if (((krt->mode & KRVTR_XYZ) == KRVTR_CUSTOM) &&
-			(
-				(!((krt->angles.x == 360.0) || (krt->angles.y == 360.0) || (krt->angles.z == 360.0))) ||
-				(krt->angles.x > 360.0) || (krt->angles.x < 0.0) ||
-				(krt->angles.y > 360.0) || (krt->angles.y < 0.0) ||
-				(krt->angles.z > 360.0) || (krt->angles.z < 0.0)
-			)
-		) {
-			fprintf(stderr, 
-				"krtvr3d_scad: In KRUHOTVAR3D[%u]=[%g,%g,%g], at least one angle must be 360, all must be <= 360 and >= 0.\n",
-				n, krt->angles.x, krt->angles.y, krt->angles.z
-			);
-		}
-	}
-	if (err) return 2;
+	if (krtvr3d_errorcheck(krtvar)) return 2;
 
 	// If we get here, we have found no errors in any of the
 	// KRUHOTVAR3D structures passed to us as a list of inputs.
